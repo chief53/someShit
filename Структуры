@@ -1,0 +1,58 @@
+#include <iostream>
+
+using namespace std;
+
+const int value = 6;
+
+struct Train
+    {
+        string destination;
+        int number;
+        int hour;
+        int minutes;
+    };
+
+Train* getStructure()
+{
+    Train arr[value];
+    for (int i = 0; i < value; i++)
+    {
+     string getdest = " ";
+     int getnum = 0,gethou = 0,getmin = 0;
+     cout << "Введите пункт назначения поезда " << i << endl;
+     cin >> getdest;
+     cout << "Введите номер поезда " << i << endl;
+     cin >> getnum;
+     cout << "Введите час отправления поезда " << i << endl;
+     cin >> gethou;
+     cout << "Введите минуты отправления поезда " << i << endl;
+     cin >> getmin;
+     arr[i] = { getdest , getnum, gethou, getmin };    
+    }
+ return arr;
+}
+
+void getDestTrains(Train train, string getdest)
+{
+    
+    if (train.destination == getdest)
+    {
+        cout << "Номер нужного вам поезда: " << train.number << endl;
+        cout << "Отправление в " <<train.hour<<":"<< train.minutes << endl;
+    };
+}
+
+int main()
+{
+    setlocale(0, "");
+    getStructure();
+    string getdest;
+    cout << "Введите ваш пункт назначения" << endl;
+    cin >> getdest;
+    for (int i = 0; i < value; i++)
+    {
+        Train* gettrain = getStructure();
+        getDestTrains(gettrain[i], getdest);
+    }
+    return 0;
+}
