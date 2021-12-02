@@ -1,58 +1,56 @@
-#include <iostream>
+#include<iostream>
+#include<string.h>
 
 using namespace std;
 
-const int value = 6;
+const int n = 6;  //Число элементов массива
 
-struct Train
-    {
-        string destination;
-        int number;
-        int hour;
-        int minutes;
-    };
+struct Train { //Структура
+    char destination[21];
+    unsigned int num;
+    char time[6];
+};
 
-Train* getStructure()
+void Copy(Train& toHere, Train fromHere)  //Вспомогательная функция для сортировки 
 {
-    Train arr[value];
-    for (int i = 0; i < value; i++)
-    {
-     string getdest = " ";
-     int getnum = 0,gethou = 0,getmin = 0;
-     cout << "Введите пункт назначения поезда " << i << endl;
-     cin >> getdest;
-     cout << "Введите номер поезда " << i << endl;
-     cin >> getnum;
-     cout << "Введите час отправления поезда " << i << endl;
-     cin >> gethou;
-     cout << "Введите минуты отправления поезда " << i << endl;
-     cin >> getmin;
-     arr[i] = { getdest , getnum, gethou, getmin };    
-    }
- return arr;
-}
-
-void getDestTrains(Train train, string getdest)
-{
-    
-    if (train.destination == getdest)
-    {
-        cout << "Номер нужного вам поезда: " << train.number << endl;
-        cout << "Отправление в " <<train.hour<<":"<< train.minutes << endl;
-    };
+    strcpy_s(toHere.destination, fromHere.destination);
+    strcpy_s(toHere.time, fromHere.time);
+    toHere.num = fromHere.num;
 }
 
 int main()
 {
     setlocale(0, "");
-    getStructure();
-    string getdest;
-    cout << "Введите ваш пункт назначения" << endl;
-    cin >> getdest;
-    for (int i = 0; i < value; i++)
-    {
-        Train* gettrain = getStructure();
-        getDestTrains(gettrain[i], getdest);
+    Train *arrTrains = new Train[n];
+    int i = 0;
+    for (i = 0; i < n; i++) { //Ввод данных
+        cout << "Введите пункт назначения поезда: ";
+        cin >> arrTrains[i].destination;
+        cout << "Введите номер поезда: ";
+        cin >> arrTrains[i].num;
+        cout << "Введите время отправления: ";
+        cin >> arrTrains[i].time;
     }
+
+    Train buf;  //Сортировка методом пузырька (время должно быть введено в одном формате)
+    for (i = 0; i < n - 1; i++)
+        for (int k = 0; k < n - 1; k++)
+            if (strcmp(arrTrains[k].time, arrTrains[k + 1].time) > 0) {
+                Copy(buf, arrTrains[k]);
+                Copy(arrTrains[k], arrTrains[k + 1]);
+                Copy(arrTrains[k + 1], buf);
+            }
+
+    char desiredDest[21]; //Поиск поезда
+    cout << "Введите ваш пункт назначения: ";
+    cin >> desiredDest;
+    bool f = false; //Флаг (найден ли хоть один)
+    for (i = 0; i < n; i++)
+        if (strcmp(arrTrains[i].destination, desiredDest) == 0) { //Вывод информации при совпадениях
+            cout << "Поезд #" << arrTrains[i].num << ' ' << arrTrains[i].time << ' ' << endl;
+            f = true;
+        }
+    if (!f) cout << "Поездов по заданному маршруту нет"; //Сообщение при отсутствии необходимых данных
+
     return 0;
 }
